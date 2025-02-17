@@ -3,3 +3,5 @@ SpeechRecognition
 langchain_ollama
 pyaudio
 vosk
+tkvideo
+keyboard
