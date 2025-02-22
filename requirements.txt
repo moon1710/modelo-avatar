@@ -1,7 +1,11 @@
-pyttsx3
-SpeechRecognition
-langchain_ollama
-pyaudio
-vosk
-tkvideo
+opencv-python
+Pillow
+speechrecognition
 keyboard
+langchain_ollama
+TTS
+simpleaudio
+torch
+torchaudio
+torchvision
+numpy
