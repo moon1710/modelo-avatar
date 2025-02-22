@@ -6,7 +6,7 @@ import keyboard
 from langchain_ollama import OllamaLLM
 from TTS.api import TTS
 import simpleaudio as sa  # Para reproducir audio en Python
-from vosk import Model, KaldiRecognizer
+from vosk_recognition import Model, KaldiRecognizer
 import pyaudio
 import json
 
