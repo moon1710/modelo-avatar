@@ -15,39 +15,6 @@ import re
 import wave
 import itertools
 
-def clean_phonemes(phonemes_text):
-    lines = phonemes_text.split()  # cada chunk es un “fonema”
-    cleaned_list = []
-
-    for chunk in lines:
-        # Quita acentos primarios y secundarios
-        chunk = re.sub(r'[ˈˌ]', '', chunk)
-        # Filtra caracteres que no estén en tu set
-        chunk = re.sub(r'[^a-zA-Zɪʊɔæəʃʒŋθð]', '', chunk)
-
-        if chunk.strip():
-            cleaned_list.append(chunk)
-
-    # Reúne los fonemas limpios
-    return " ".join(cleaned_list)
-
-
-def split_chunk_into_fonemas(chunk):
-    chunk = re.sub(r"[ˈˌ]", "", chunk)  # Quitar acentos
-    sub_fonemas = []
-    
-    i = 0
-    while i < len(chunk):
-        if i + 1 < len(chunk) and chunk[i:i+2] in phoneme_to_viseme:
-            sub_fonemas.append(chunk[i:i+2])
-            i += 2
-        else:
-            sub_fonemas.append(chunk[i])
-            i += 1
-    
-    print(f"📌 Fonemas separados: {sub_fonemas}")  # 👀 Debug
-    return sub_fonemas
-
 
 # ---------------------------
 # Configuración de la ventana y video idle (Tkinter + OpenCV)
@@ -173,133 +140,79 @@ def extract_phonemes(text):
         print(f"❌ Error al extraer fonemas: {e}")
         return "neutral"
 
-# 🔹 **Mapeo de duraciones de fonemas según tipo de sonido**
-phoneme_durations = {
-    "m": 1.2, "p": 1.0, "b": 1.0,  # Labiales (más largos)
-    "f": 0.8, "v": 0.8,  # Labiodentales
-    "t": 0.6, "d": 0.6, "s": 0.5, "z": 0.5,  # Dentales y fricativas (rápidos)
-    "ʃ": 0.7, "ʒ": 0.7,  # Fricativas suaves
-    "k": 0.6, "g": 0.6, "ŋ": 0.6,  # Velares
-    "i": 0.9, "e": 0.9, "o": 0.9, "u": 0.9, "a": 1.1,  # Vocales
-    "n": 0.8, "l": 0.8, "r": 0.8,  # Sonidos nasales y líquidos
-    "neutral": 0.4  # Silencios
-}
-
-# 🔥 **Mapeo de fonemas a visemas**
-phoneme_to_viseme = {
-    # **Labiales**
-    "p": "m", "b": "m", "m": "m",
-
-    # **Labiodentales**
-    "f": "f", "v": "f",
-
-    # **Dentales y alveolares**
-    "t": "t", "d": "t", "s": "s", "z": "s",
-    "θ": "t", "ð": "t",
-
-    # **Velares**
-    "k": "k", "g": "k", "ŋ": "k",
-
-    # **Fricativas**
-    "ʃ": "sh", "ʒ": "sh", "h": "h",
-
-    # **Vocales delanteras**
-    "i": "i", "ɪ": "i", "e": "e", "ɛ": "e",
-
-    # **Vocales centrales y traseras**
-    "a": "a", "ɑ": "a", "ɔ": "o", "o": "o",
-    "u": "u", "ʊ": "u", "ə": "e",
-
-    # **Nasales y líquidos**
-    "n": "n", "l": "l", "r": "r",
-    "w": "u", "j": "i",
-
-    # **Diptongos y combinaciones comunes**
-    "ɪə": "i", "eɪ": "e", "ɔɪ": "o",
-    "aɪ": "a", "oʊ": "o", "uə": "u",
-    "dʒ": "t", "tʃ": "t", "ʊə": "u",
-    "ɪŋ": "i", "aʊ": "a", "ju": "u",
-    
-    # **Nuevos fonemas mapeados**
-    "kt": "k", "əvə": "e", "dju": "d", "əs": "s",
-    "st": "s", "əl": "e", "dʒd": "t", "ɪnðə": "i",
-    "faɪəz": "a", "ʃeɪpt": "sh", "aɪdiəlz": "a",
-    "əb": "e", "naʃənəlɪzəm": "n", "ɪsl": "i",
-    "laɪfz": "a", "dɪkeɪtɪd": "t", "eɪtɪŋ": "e",
-    "mðə": "m", "ən": "n", "bɪldɪŋ": "b",
-    "spə": "s", "əs": "s", "səsaɪəti": "s",
-    "faʊndɪd": "f", "əp": "e", "ɪnsɪpəlz": "i",
-    "səʊʃəl": "s", "stɪs": "s",
-
-    # **Expansión de sonidos para mayor lipsync**
-    "tməʊst": "t", "kw": "k", "stʃənz": "s",
-    "nlaɪtən": "n", "dɪfaɪ": "d", "pli": "p",
-    "pəʊz": "p", "kwəʊ": "k", "ɪvən": "i",
-    "təwɔ": "t", "steɪtk": "t", "aft": "a",
-    "aspə": "a", "eɪʃənz": "e", "matəz": "m",
-    "steɪtəs": "s", "ndəns": "n", "dʒɪŋ": "t",
-    "nju": "n", "paθ": "p", "wəd": "w"
+# 🔹 **Mapeo de duración de visemas**
+viseme_durations = {
+    "m": 0.6, "p": 0.6, "b": 0.6,
+    "f": 0.5, "v": 0.5,
+    "t": 0.4, "d": 0.4, "s": 0.3, "z": 0.3,
+    "k": 0.4, "g": 0.4,
+    "i": 0.5, "e": 0.5, "a": 0.6, "o": 0.6, "u": 0.6,
+    "n": 0.5, "l": 0.5, "r": 0.5,
+    "neutral": 0.2
 }
 
 
-
-
-
+# 🔹 **Mapeo de letras a visemas (más preciso que fonemas)**
+letter_to_viseme = {
+    "a": "a", "e": "e", "i": "i", "o": "o", "u": "u",  # Vocales abiertas
+    "m": "m", "p": "m", "b": "m",  # Labiales cerrados
+    "f": "f", "v": "f",  # Labiodentales
+    "s": "s", "z": "s", "t": "t", "d": "t",  # Sonidos con dientes juntos
+    "l": "l", "r": "r", "n": "n",  # Sonidos líquidos/nasales
+    "w": "u", "y": "i",  # Semivocales
+    "c": "k", "k": "k", "g": "k", "x": "k",  # Sonidos velares
+    "h": "h", "j": "i", "q": "k"  # Agregando más sonidos
+}
 # ---------------------------
 # 🔥 Lipsync con animación de boca
 # ---------------------------
 import random
 
-def lipsync_animation(phonemes, duration=0.9):
-    """Mueve los labios según los fonemas detectados, con variaciones aleatorias para mayor realismo."""
-    phoneme_list = phonemes.split(" ")
+def text_to_visemes(text):
+    """Convierte texto en una lista de visemas según las letras."""
+    text = text.lower()
+    visemes = [letter_to_viseme.get(char, "neutral") for char in text if char.isalpha()]
+    return visemes
 
-    for phoneme in phoneme_list:
-        viseme = phoneme_to_viseme.get(phoneme, "neutral")
-        viseme_duration = max(phoneme_durations.get(viseme, 0.5), 0.3)
+def lipsync_animation(text, duration=1.0):
+    """Mueve los labios según las letras detectadas en el texto."""
+    viseme_list = text_to_visemes(text)
+    total_time = duration / max(len(viseme_list), 1)
 
-        # 🔹 Agregar variación aleatoria para mayor realismo
-        variation = random.uniform(0.8, 1.2)
-        viseme_duration *= variation
+    for viseme in viseme_list:
+        viseme_duration = viseme_durations.get(viseme, 0.4)
+        viseme_duration *= random.uniform(0.9, 1.1)  # Variación natural
 
-        print(f"✅ Fonema '{phoneme}' -> Visema '{viseme}', durando {viseme_duration:.2f}s")  # Debug
+        print(f"✅ Letra -> Visema '{viseme}', durando {viseme_duration:.2f}s")  # Debug
         
         update_frame(viseme)
         time.sleep(viseme_duration)
 
     update_frame("neutral")
 
-# ---------------------------
-# Función para sintetizar voz y hacer lipsync
-# ---------------------------
 def speak_response(response):
     def run_tts():
         output_audio_path = "response.wav"
         print(f"Bot (Habib): {response}")
 
-        # Extraer fonemas
-        phonemes = extract_phonemes(response)
-        phonemes = clean_phonemes(phonemes)
-
-        # Generar audio con Coqui TTS
+        # 🔹 **Generar audio con Coqui TTS**
         tts.tts_to_file(text=response, speaker="p236", file_path=output_audio_path)
 
-        # Calcular duración con wave
+        # 🔹 **Calcular duración con wave**
         audio_duration = get_wav_duration(output_audio_path)
 
-        # Reproducir audio
+        # 🔹 **Reproducir audio**
         wave_obj = sa.WaveObject.from_wave_file(output_audio_path)
         play_obj = wave_obj.play()
 
-        # Lanzar lipsync con la duración real del audio
-        lipsync_animation(phonemes, duration=audio_duration)
+        # 🔹 **Lanzar lipsync con la duración real del audio**
+        lipsync_animation(response, duration=audio_duration)
 
-        # Esperar a que termine el audio
+        # 🔹 **Esperar a que termine el audio**
         play_obj.wait_done()
 
     tts_thread = threading.Thread(target=run_tts)
     tts_thread.start()
-
 # ---------------------------
 # Bucle de conversación
 # ---------------------------
