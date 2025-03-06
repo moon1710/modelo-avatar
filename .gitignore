@@ -3,3 +3,5 @@ modelo_vosk_en
 modelo_vosk_es
 vosk
 .venv
+response.wav
+output.wav

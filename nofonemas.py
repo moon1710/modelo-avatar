@@ -193,23 +193,26 @@ def lipsync_animation(text, duration):
     total_base_duration = sum(base_durations)
     scale_factor = duration / total_base_duration if total_base_duration > 0 else 1
 
+    def update_viseme_frame(i, start_time):
+        if i < len(viseme_list):
+            viseme = viseme_list[i]
+            base_duration = base_durations[i]
+            scaled_duration = base_duration * scale_factor
+            current_time = time.time()
+            elapsed = current_time - start_time
+            
+            # Si la próxima duración sobrepasa el audio, ajusta el tiempo
+            if elapsed + scaled_duration > duration:
+                scaled_duration = duration - elapsed
+            
+            update_frame(viseme)
+            root.after(int(scaled_duration * 1000), update_viseme_frame, i + 1, start_time)
+        else:
+            update_frame("neutral")
+
     start_time = time.time()
-    for viseme, base_duration in zip(viseme_list, base_durations):
-        scaled_duration = base_duration * scale_factor
-        current_time = time.time()
-        elapsed = current_time - start_time
-        
-        # Si la próxima duración sobrepasa el audio, ajusta el tiempo
-        if elapsed + scaled_duration > duration:
-            scaled_duration = duration - elapsed
-        
-        update_frame(viseme)
-        time.sleep(scaled_duration)
+    update_viseme_frame(0, start_time)
 
-        if time.time() - start_time >= duration:
-            break
-
-    update_frame("neutral")
 
 def speak_response(response):
     def run_tts():
