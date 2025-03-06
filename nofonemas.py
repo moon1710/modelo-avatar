@@ -27,14 +27,23 @@ tts = TTS("tts_models/en/vctk/vits")
 
 # Cargar imágenes para lipsync
 frames = {
-    "neutral": Image.open("./assets/fonemas/neutral.jpg"),
-    "a": Image.open("./assets/fonemas/a.jpg"),
-    "e": Image.open("./assets/fonemas/e.jpg"),
-    "i": Image.open("./assets/fonemas/i.jpg"),
-    "o": Image.open("./assets/fonemas/o.jpg"),
-    "u": Image.open("./assets/fonemas/u.jpg"),
-    "m": Image.open("./assets/fonemas/m.jpg"),
+    "neutral": Image.open("./assets/fonemas/neutral.png"),
+    "a": Image.open("./assets/fonemas/a.png"),
+    "e": Image.open("./assets/fonemas/e.png"),
+    "i": Image.open("./assets/fonemas/i.png"),
+    "o": Image.open("./assets/fonemas/o.png"),
+    "u": Image.open("./assets/fonemas/u.png"),
+    "m": Image.open("./assets/fonemas/m.png"),
+    "f": Image.open("./assets/fonemas/f.png"),
+    "s": Image.open("./assets/fonemas/s.png"),
+    "t": Image.open("./assets/fonemas/t.png"),
+    "l": Image.open("./assets/fonemas/l.png"),
+    "r": Image.open("./assets/fonemas/r.png"),
+    "n": Image.open("./assets/fonemas/n.png"),
+    "k": Image.open("./assets/fonemas/k.png"),
+    "h": Image.open("./assets/fonemas/h.png")
 }
+
 
 video_label = tk.Label(root)
 video_label.pack()
