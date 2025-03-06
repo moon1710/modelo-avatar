@@ -183,19 +183,31 @@ def text_to_visemes(text):
     visemes = [letter_to_viseme.get(char, "neutral") for char in text if char.isalpha()]
     return visemes
 
-def lipsync_animation(text, duration=1.0):
-    """Mueve los labios según las letras detectadas en el texto."""
+def lipsync_animation(text, duration):
     viseme_list = text_to_visemes(text)
-    total_time = duration / max(len(viseme_list), 1)
+    if not viseme_list:
+        update_frame("neutral")
+        return
 
-    for viseme in viseme_list:
-        viseme_duration = viseme_durations.get(viseme, 0.4)
-        viseme_duration *= random.uniform(0.9, 1.1)  # Variación natural
+    base_durations = [viseme_durations.get(viseme, 0.4) for viseme in viseme_list]
+    total_base_duration = sum(base_durations)
+    scale_factor = duration / total_base_duration if total_base_duration > 0 else 1
 
-        print(f"✅ Letra -> Visema '{viseme}', durando {viseme_duration:.2f}s")  # Debug
+    start_time = time.time()
+    for viseme, base_duration in zip(viseme_list, base_durations):
+        scaled_duration = base_duration * scale_factor
+        current_time = time.time()
+        elapsed = current_time - start_time
+        
+        # Si la próxima duración sobrepasa el audio, ajusta el tiempo
+        if elapsed + scaled_duration > duration:
+            scaled_duration = duration - elapsed
         
         update_frame(viseme)
-        time.sleep(viseme_duration)
+        time.sleep(scaled_duration)
+
+        if time.time() - start_time >= duration:
+            break
 
     update_frame("neutral")
 
@@ -222,6 +234,7 @@ def speak_response(response):
 
     tts_thread = threading.Thread(target=run_tts)
     tts_thread.start()
+
 # ---------------------------
 # Bucle de conversación
 # ---------------------------
