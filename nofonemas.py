@@ -27,21 +27,21 @@ tts = TTS("tts_models/en/vctk/vits")
 
 # Cargar imágenes para lipsync
 frames = {
-    "neutral": Image.open("./assets/fonemas/neutral.png"),
-    "a": Image.open("./assets/fonemas/a.png"),
-    "e": Image.open("./assets/fonemas/e.png"),
-    "i": Image.open("./assets/fonemas/i.png"),
-    "o": Image.open("./assets/fonemas/o.png"),
-    "u": Image.open("./assets/fonemas/u.png"),
-    "m": Image.open("./assets/fonemas/m.png"),
-    "f": Image.open("./assets/fonemas/f.png"),
-    "s": Image.open("./assets/fonemas/s.png"),
-    "t": Image.open("./assets/fonemas/t.png"),
-    "l": Image.open("./assets/fonemas/l.png"),
-    "r": Image.open("./assets/fonemas/r.png"),
-    "n": Image.open("./assets/fonemas/n.png"),
-    "k": Image.open("./assets/fonemas/k.png"),
-    "h": Image.open("./assets/fonemas/h.png")
+    "neutral": Image.open("./imgs/neutral_enh.png"),
+    "a": Image.open("./imgs/a_enh.png"),
+    "e": Image.open("./imgs/e_enh.png"),
+    "i": Image.open("./imgs/i_enh.png"),
+    "o": Image.open("./imgs/o_enh.png"),
+    "u": Image.open("./imgs/u_enh.png"),
+    "m": Image.open("./imgs/m_enh.png"),
+    "f": Image.open("./imgs/f_enh.png"),
+    "s": Image.open("./imgs/s_enh.png"),
+    "t": Image.open("./imgs/t_enh.png"),
+    "l": Image.open("./imgs/l_enh.png"),
+    "r": Image.open("./imgs/r_enh.png"),
+    "n": Image.open("./imgs/n_enh.png"),
+    "k": Image.open("./imgs/k_enh.png"),
+    "h": Image.open("./imgs/h_enh.png")
 }
 
 
