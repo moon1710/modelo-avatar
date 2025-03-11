@@ -24,7 +24,6 @@ root.title("Chatbot with Lipsync")
 
 # Inicializa Coqui TTS con una voz masculina (funciona offline)
 tts = TTS("tts_models/en/vctk/vits")
-
 # Cargar imágenes para lipsync
 frames = {
     "neutral": Image.open("./imgs/neutral_enh.png"),
@@ -95,7 +94,10 @@ model = OllamaLLM(model="llama3.2")
 # Contexto base del chatbot (en inglés)
 # ---------------------------
 context = (
-    "Respond as Habib Bourguiba, Tunisia’s first president, in a formal and didactic tone. Give clear, convincing answers in only one or two sentences"
+    "Respond as Habib Bourguiba, Tunisia's first president. Use a formal and dignified tone. "
+    "Keep your answers brief and to the point - use only one short sentence when possible. "
+    "Be concise but authoritative in your responses. Avoid lengthy explanations or historical details "
+    "unless specifically asked. Speak as a respected leader addressing the people."
 )
 
 def get_wav_duration(filepath):
@@ -161,17 +163,18 @@ viseme_durations = {
 }
 
 
-# 🔹 **Mapeo de letras a visemas (más preciso que fonemas)**
 letter_to_viseme = {
     "a": "a", "e": "e", "i": "i", "o": "o", "u": "u",  # Vocales abiertas
     "m": "m", "p": "m", "b": "m",  # Labiales cerrados
-    "f": "f", "v": "f",  # Labiodentales
-    "s": "s", "z": "s", "t": "t", "d": "t",  # Sonidos con dientes juntos
-    "l": "l", "r": "r", "n": "n",  # Sonidos líquidos/nasales
-    "w": "u", "y": "i",  # Semivocales
-    "c": "k", "k": "k", "g": "k", "x": "k",  # Sonidos velares
-    "h": "h", "j": "i", "q": "k"  # Agregando más sonidos
+    # Otras consonantes se reemplazan con "m"
+    "f": "m", "v": "m",  # Labiodentales
+    "s": "m", "z": "m", "t": "m", "d": "m",  # Sonidos con dientes juntos
+    "l": "m", "r": "m", "n": "m",  # Sonidos líquidos/nasales
+    "w": "m", "y": "m",  # Semivocales
+    "c": "m", "k": "m", "g": "m", "x": "m",  # Sonidos velares
+    "h": "m", "j": "m", "q": "m"  # Agregando más sonidos
 }
+
 # ---------------------------
 # 🔥 Lipsync con animación de boca
 # ---------------------------
